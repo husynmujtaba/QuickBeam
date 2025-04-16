@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickBeam</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <h1>QuickBeam</h1>
+    <div id="subtitle">Fast, Secure P2P File Sharing</div>
+    <div id="mode-select">
+      <button id="sendBtn">Send Files</button>
+      <button id="receiveBtn">Receive</button>
+    </div>
+    <div id="start-section" style="display:none;">
+      <h2>Start a QuickBeam Session</h2>
+      <div id="startRoomCode" style="margin: 14px 0; font-size: 1.15em; font-weight: bold;"></div>
+      <div id="startQR" style="text-align:center;"></div>
+      <button id="startChatBtn" style="margin-top:18px;">Start</button>
+    </div>
+    <div id="chat-section" style="display:none;">
+      <div id="chat-window"></div>
+      <div id="chat-input-area">
+        <input type="file" id="chatFileInput" multiple style="display:none;" />
+        <button id="attachBtn" title="Attach file">📎</button>
+        <input type="text" id="chatTextInput" placeholder="Type a message..." autocomplete="off" />
+        <button id="sendTextBtn" title="Send message">➤</button>
+      </div>
+      <div id="chatRoomCode" style="margin-left:12px;"></div>
+    </div>
+    <div id="send-section" style="display:none;">
+      <input type="file" id="fileInput" multiple />
+      <div id="roomCodeDiv" style="margin: 16px 0; font-size: 1.2em; font-weight: bold;"></div>
+      <div id="qr" style="text-align:center;"></div>
+      <div id="send-progress" style="display:none;">
+        <progress id="sendProgressBar" value="0" max="100"></progress>
+        <span id="sendProgressText"></span>
+      </div>
+    </div>
+    <div id="receive-section" style="display:none;">
+      <input type="text" id="roomInput" placeholder="Enter Room Code" />
+      <button id="joinRoomBtn">Join</button>
+      <div id="receive-progress" style="display:none;">
+        <progress id="receiveProgressBar" value="0" max="100"></progress>
+        <span id="receiveProgressText"></span>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

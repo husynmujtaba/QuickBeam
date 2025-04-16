@@ -1,0 +1,9 @@
+node_modules/
+dist/
+build/
+.env
+*.log
+*.tmp
+.DS_Store
+netlify.toml
+windsurf_deployment.yaml
