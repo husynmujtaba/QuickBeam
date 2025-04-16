@@ -1,5 +1,10 @@
+// // main.js - handles WebRTC, signaling, QR, file transfer
+// const WS_URL = 'wss://YOUR_PUBLIC_SIGNALING_SERVER_URL';
+// const APP_URL = '[https://quickbeam-p2p-fileshare.windsurf.build](https://quickbeam-p2p-fileshare.windsurf.build)';
+// let ws, pc, dataChannel, roomId, isSender = false;
+
 // main.js - handles WebRTC, signaling, QR, file transfer
-const WS_URL = 'wss://YOUR_PUBLIC_SIGNALING_SERVER_URL';
+const WS_URL = 'wss://quickbeam-signaling.onrender.com';
 const APP_URL = '[https://quickbeam-p2p-fileshare.windsurf.build](https://quickbeam-p2p-fileshare.windsurf.build)';
 let ws, pc, dataChannel, roomId, isSender = false;
 
