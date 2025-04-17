@@ -38,7 +38,8 @@
       <div id="startQR" style="text-align:center;"></div>
       <button id="startChatBtn" style="margin-top:18px;">Start</button>
     </div>
-    <div id="chat-section" style="display:none;">
+    <div id="chat-section" style="position: relative;">
+      <button id="closeSessionBtn" class="danger-btn" style="display:none; position: absolute; top: 6px; right: 12px; z-index: 10;">Close Session</button>
       <div id="chat-window"></div>
       <div id="chat-input-area">
         <input type="file" id="chatFileInput" multiple style="display:none;" />

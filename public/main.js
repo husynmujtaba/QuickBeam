@@ -37,6 +37,7 @@ const startQR = document.getElementById('startQR');
 const startChatBtn = document.getElementById('startChatBtn');
 const chatTextInput = document.getElementById('chatTextInput');
 const sendTextBtn = document.getElementById('sendTextBtn');
+const closeSessionBtn = document.getElementById('closeSessionBtn');
 let firstFilesToSend = [];
 
 // UI event handlers
@@ -102,8 +103,11 @@ function sendFiles() {
   const files = Array.from(fileInput.files);
   if (!files.length) return;
   let fileIndex = 0;
-  let chunkSize = 256 * 1024;
-
+  function getChunkSize(fileSize) {
+    if (fileSize > 100 * 1024 * 1024) return 2 * 1024 * 1024; // 2MB for >100MB
+    if (fileSize > 10 * 1024 * 1024) return 1024 * 1024; // 1MB for >10MB
+    return 512 * 1024; // 512KB default
+  }
   function sendNextFile() {
     if (fileIndex >= files.length) {
       sendProgressBar.value = 100;
@@ -112,19 +116,21 @@ function sendFiles() {
     }
     let file = files[fileIndex];
     let offset = 0;
+    let chunkSize = getChunkSize(file.size);
     sendProgressDiv.style.display = '';
     sendProgressBar.value = 0;
     sendProgressText.textContent = `0% (${file.name})`;
-
+    let startTime = Date.now();
+    let lastTime = startTime;
+    let lastOffset = 0;
     // Send file metadata
     dataChannel.send(JSON.stringify({ name: file.name, size: file.size, type: file.type, idx: fileIndex + 1, total: files.length }));
-
     const reader = new FileReader();
     reader.onload = e => {
       let buffer = e.target.result;
       function sendChunk() {
         while (offset < buffer.byteLength) {
-          if (dataChannel.bufferedAmount > 2 * 1024 * 1024) {
+          if (dataChannel.bufferedAmount > 4 * 1024 * 1024) {
             setTimeout(sendChunk, 10);
             return;
           }
@@ -132,8 +138,19 @@ function sendFiles() {
           dataChannel.send(chunk);
           offset += chunkSize;
           let percent = Math.floor((offset / buffer.byteLength) * 100);
+          // Calculate speed
+          let now = Date.now();
+          let elapsed = (now - lastTime) / 1000;
+          let speed = '';
+          if (elapsed > 0.5) {
+            let bytesSent = offset - lastOffset;
+            let bps = bytesSent / elapsed;
+            speed = bps > 1024 * 1024 ? `${(bps / (1024 * 1024)).toFixed(2)} MB/s` : `${(bps / 1024).toFixed(2)} KB/s`;
+            lastTime = now;
+            lastOffset = offset;
+          }
           sendProgressBar.value = percent;
-          sendProgressText.textContent = `${percent}% (${file.name})`;
+          sendProgressText.textContent = `${percent}% (${file.name})${speed ? ' - ' + speed : ''}`;
         }
         if (offset >= buffer.byteLength) {
           fileIndex++;
@@ -249,12 +266,19 @@ function addChatBubble({ name, type, progress, sent, done, text }) {
 // Chat-based file sending
 function sendFilesChat(files) {
   let fileIndex = 0;
-  let chunkSize = 256 * 1024;
-
+  function getChunkSize(fileSize) {
+    if (fileSize > 100 * 1024 * 1024) return 2 * 1024 * 1024;
+    if (fileSize > 10 * 1024 * 1024) return 1024 * 1024;
+    return 512 * 1024;
+  }
   function sendNextFile() {
     if (fileIndex >= files.length) return;
     let file = files[fileIndex];
     let offset = 0;
+    let chunkSize = getChunkSize(file.size);
+    let startTime = Date.now();
+    let lastTime = startTime;
+    let lastOffset = 0;
     // Add chat bubble for this file
     let bubble = addChatBubble({name: file.name, type: file.type, progress: 0, sent: true, done: false});
     // Send file metadata
@@ -264,7 +288,7 @@ function sendFilesChat(files) {
       let buffer = e.target.result;
       function sendChunk() {
         while (offset < buffer.byteLength) {
-          if (dataChannel.bufferedAmount > 2 * 1024 * 1024) {
+          if (dataChannel.bufferedAmount > 4 * 1024 * 1024) {
             setTimeout(sendChunk, 10);
             return;
           }
@@ -272,11 +296,24 @@ function sendFilesChat(files) {
           dataChannel.send(chunk);
           offset += chunkSize;
           let percent = Math.floor((offset / buffer.byteLength) * 100);
-          bubble.querySelector('progress').value = percent;
+          // Calculate speed
+          let now = Date.now();
+          let elapsed = (now - lastTime) / 1000;
+          let speed = '';
+          if (elapsed > 0.5) {
+            let bytesSent = offset - lastOffset;
+            let bps = bytesSent / elapsed;
+            speed = bps > 1024 * 1024 ? `${(bps / (1024 * 1024)).toFixed(2)} MB/s` : `${(bps / 1024).toFixed(2)} KB/s`;
+            lastTime = now;
+            lastOffset = offset;
+          }
+          if (bubble.querySelector('progress')) bubble.querySelector('progress').value = percent;
+          if (bubble.querySelector('progress')) bubble.querySelector('progress').nextSibling && (bubble.querySelector('progress').nextSibling.textContent = speed ? ` - ${speed}` : '');
+          else if (speed) bubble.appendChild(document.createTextNode(` - ${speed}`));
         }
         if (offset >= buffer.byteLength) {
           // Mark as done
-          bubble.querySelector('progress').remove();
+          if (bubble.querySelector('progress')) bubble.querySelector('progress').remove();
           bubble.appendChild(document.createTextNode('Sent!'));
           fileIndex++;
           sendNextFile();
@@ -359,6 +396,7 @@ function showChatUI(room) {
   sendSection.style.display = 'none';
   receiveSection.style.display = 'none';
   chatRoomCode.textContent = 'Room: ' + room;
+  setCloseSessionVisible(true);
 }
 
 // --- Start session UI logic ---
@@ -377,6 +415,7 @@ function showStartQR() {
   link.style.fontSize = '0.95em';
   link.textContent = url;
   startQR.appendChild(link);
+  setCloseSessionVisible(true);
 }
 
 startChatBtn.onclick = () => {
@@ -434,6 +473,11 @@ window.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// Utility to show/hide Close Session button
+function setCloseSessionVisible(visible) {
+  closeSessionBtn.style.display = visible ? '' : 'none';
+}
+
 // --- Drag and drop file support for chat window ---
 chatWindow.addEventListener('dragover', (e) => {
   e.preventDefault();
@@ -450,3 +494,21 @@ chatWindow.addEventListener('drop', (e) => {
     sendFilesChat(Array.from(e.dataTransfer.files));
   }
 });
+
+// --- Close Session logic ---
+closeSessionBtn.style.display = 'none';
+document.getElementById('closeSessionBtn').onclick = function() {
+  if (confirm('Are you sure you want to close the session? This will disconnect you from the room and reload the page.')) {
+    try {
+      if (dataChannel) dataChannel.close();
+    } catch {}
+    try {
+      if (pc) pc.close();
+    } catch {}
+    try {
+      if (ws) ws.close();
+    } catch {}
+    setCloseSessionVisible(false);
+    location.reload();
+  }
+};
