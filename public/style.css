@@ -35,6 +35,33 @@ progress.dark, body.dark progress { background: #23272f; }
 .bubble-progress { margin-top: 6px; width: 100%; height: 8px; }
 .bubble-download { display: block; margin-top: 8px; color: #2b4b6f; font-weight: bold; text-decoration: underline; cursor: pointer; }
 .bubble-download.dark, body.dark .bubble-download { color: #38e8e1; }
+.bubble-link {
+  color: #2b4b6f;
+  text-decoration: underline;
+  word-break: break-all;
+}
+body.dark .bubble-link {
+  color: #38e8e1;
+}
+.copy-btn {
+  background: none;
+  border: none;
+  font-size: 1.1em;
+  cursor: pointer;
+  margin-left: 8px;
+  color: #4f8cff;
+  vertical-align: middle;
+  transition: color 0.2s;
+}
+.copy-btn:hover {
+  color: #38e8e1;
+}
+body.dark .copy-btn {
+  color: #38e8e1;
+}
+body.dark .copy-btn:hover {
+  color: #fff;
+}
 #chat-input-area { display: flex; align-items: center; padding: 10px; border-top: 1px solid #b6c2d6; background: #f6f8fa; border-radius: 0 0 12px 12px; }
 #chat-input-area.dark, body.dark #chat-input-area { background: #23272f; border-top: 1px solid #2b4b6f; }
 #chatTextInput { flex: 1 1 auto; margin: 0 10px; padding: 12px 14px; border-radius: 8px; border: 1px solid #b6c2d6; font-size: 1.07em; min-width: 0; }

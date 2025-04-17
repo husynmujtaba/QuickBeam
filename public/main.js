@@ -202,7 +202,29 @@ function addChatBubble({ name, type, progress, sent, done, text }) {
   const bubble = document.createElement('div');
   bubble.className = 'chat-bubble' + (sent ? '' : ' received');
   if (type === 'text' || text) {
-    bubble.textContent = text;
+    // Detect link (http/https)
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    if (text && urlRegex.test(text)) {
+      // If message is a link, make it clickable
+      bubble.innerHTML = text.replace(urlRegex, function(url) {
+        return `<a href="${url}" target="_blank" rel="noopener" class="bubble-link">${url}</a>`;
+      });
+    } else {
+      // Plain text: add copy button
+      const span = document.createElement('span');
+      span.textContent = text;
+      bubble.appendChild(span);
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'copy-btn';
+      copyBtn.title = 'Copy text';
+      copyBtn.textContent = '📋';
+      copyBtn.onclick = () => {
+        navigator.clipboard.writeText(text);
+        copyBtn.textContent = '✅';
+        setTimeout(() => copyBtn.textContent = '📋', 1200);
+      };
+      bubble.appendChild(copyBtn);
+    }
     chatWindow.appendChild(bubble);
     chatWindow.scrollTop = chatWindow.scrollHeight;
     return bubble;
