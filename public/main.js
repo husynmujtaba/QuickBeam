@@ -54,6 +54,9 @@ receiveBtn.onclick = () => {
   isSender = false;
   sendSection.style.display = 'none';
   receiveSection.style.display = '';
+  startSection.style.display = 'none'; // Hide the QR/start section if visible
+  startRoomCode.textContent = '';
+  startQR.innerHTML = '';
 };
 attachBtn.onclick = () => chatFileInput.click();
 chatFileInput.onchange = () => {

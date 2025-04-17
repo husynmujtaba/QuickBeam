@@ -5,8 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QuickBeam</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .dark-toggle {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      background: none;
+      border: none;
+      font-size: 1.4em;
+      cursor: pointer;
+      color: #4f8cff;
+      z-index: 10;
+      transition: color 0.2s;
+    }
+    .dark-toggle:hover {
+      color: #38e8e1;
+    }
+  </style>
 </head>
 <body>
+  <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
   <div id="app">
     <h1>QuickBeam</h1>
     <div id="subtitle">Fast, Secure P2P File Sharing</div>
@@ -50,5 +68,17 @@
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
   <script src="main.js"></script>
+  <script>
+    // Dark mode persistence and toggle
+    const darkToggle = document.getElementById('darkToggle');
+    function setDarkMode(on) {
+      document.body.classList.toggle('dark', on);
+      darkToggle.textContent = on ? '☀️' : '🌙';
+      localStorage.setItem('darkMode', on ? '1' : '0');
+    }
+    darkToggle.onclick = () => setDarkMode(!document.body.classList.contains('dark'));
+    // On load, set mode from localStorage
+    if (localStorage.getItem('darkMode') === '1') setDarkMode(true);
+  </script>
 </body>
 </html>

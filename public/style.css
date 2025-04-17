@@ -1,33 +1,75 @@
 body { font-family: Arial, sans-serif; background: #f6f8fa; margin: 0; }
+body.dark { background: #161b22; }
 #app { max-width: 420px; margin: 40px auto; background: #fff; box-shadow: 0 4px 24px #b6c2d6; padding: 32px 28px 24px 28px; border-radius: 18px; }
+#app.dark, body.dark #app { background: #23272f; box-shadow: 0 4px 24px #11151a; }
 h1 { text-align: center; font-size: 2.2em; letter-spacing: 2px; color: #2b4b6f; margin-bottom: 0.2em; }
+h1.dark, body.dark h1 { color: #a5d6ff; }
 #subtitle { text-align: center; color: #4677a3; font-size: 1.1em; margin-bottom: 1.5em; }
+#subtitle.dark, body.dark #subtitle { color: #7ecfff; }
 button { margin: 8px; padding: 12px 28px; font-size: 1.1em; border-radius: 8px; border: none; background: linear-gradient(90deg, #4f8cff 0%, #38e8e1 100%); color: #fff; font-weight: bold; cursor: pointer; transition: box-shadow 0.2s; box-shadow: 0 2px 8px #d6e6ff; }
+button.dark, body.dark button { background: linear-gradient(90deg, #2b4b6f 0%, #38e8e1 100%); color: #fff; }
 button:hover { box-shadow: 0 4px 16px #b6e6ff; }
+button.dark:hover, body.dark button:hover { box-shadow: 0 4px 16px #2b4b6f; }
 input[type="file"] { margin: 18px 0 10px 0; }
 input[type="text"] { padding: 10px; font-size: 1.1em; border-radius: 6px; border: 1px solid #b6c2d6; width: 100%; margin-bottom: 10px; }
+input[type="text"].dark, body.dark input[type="text"] { background: #23272f; color: #e6f4ff; border: 1px solid #2b4b6f; }
 #roomCodeDiv { text-align: center; background: #e6f4ff; color: #2b4b6f; border-radius: 8px; padding: 12px; margin: 18px 0; letter-spacing: 2px; }
+#roomCodeDiv.dark, body.dark #roomCodeDiv { background: #2b4b6f; color: #a5d6ff; }
 progress { width: 100%; height: 24px; margin-top: 10px; }
+progress.dark, body.dark progress { background: #23272f; }
 #send-progress, #receive-progress { margin-top: 18px; }
 #sendProgressText, #receiveProgressText { display: block; text-align: center; margin-top: 8px; font-size: 1.1em; color: #2b4b6f; }
+#sendProgressText.dark, #receiveProgressText.dark, body.dark #sendProgressText, body.dark #receiveProgressText { color: #a5d6ff; }
 #mode-select { text-align: center; margin-bottom: 24px; }
 #chat-section { display: flex; flex-direction: column; height: 500px; border: 1px solid #e6f4ff; border-radius: 12px; background: #fafdff; box-shadow: 0 2px 10px #e6f4ff; margin-bottom: 18px; }
+#chat-section.dark, body.dark #chat-section { background: #1a1d23; border: 1px solid #2b4b6f; box-shadow: 0 2px 10px #11151a; }
 #chat-window { flex: 1; overflow-y: auto; padding: 18px 12px 12px 12px; display: flex; flex-direction: column; gap: 12px; }
+#chat-window.dark, body.dark #chat-window { background: #181c20; }
 #chat-window.dragover { background: #e0f7fa; border: 2px dashed #4f8cff; }
+#chat-window.dragover.dark, body.dark #chat-window.dragover { background: #222b2f; border: 2px dashed #38e8e1; }
 .chat-bubble { max-width: 70%; padding: 12px 18px; border-radius: 16px; background: #e6f4ff; color: #2b4b6f; align-self: flex-end; margin-bottom: 2px; box-shadow: 0 1px 4px #d6e6ff; font-size: 1.05em; position: relative; }
+.chat-bubble.dark, body.dark .chat-bubble { background: #2b4b6f; color: #a5d6ff; }
 .chat-bubble.received { background: #e9ffe6; color: #226c2b; align-self: flex-start; }
+.chat-bubble.received.dark, body.dark .chat-bubble.received { background: #223a2b; color: #a5ffb6; }
 .bubble-filename { font-weight: bold; margin-bottom: 4px; }
 .bubble-progress { margin-top: 6px; width: 100%; height: 8px; }
 .bubble-download { display: block; margin-top: 8px; color: #2b4b6f; font-weight: bold; text-decoration: underline; cursor: pointer; }
+.bubble-download.dark, body.dark .bubble-download { color: #38e8e1; }
 #chat-input-area { display: flex; align-items: center; padding: 10px; border-top: 1px solid #b6c2d6; background: #f6f8fa; border-radius: 0 0 12px 12px; }
+#chat-input-area.dark, body.dark #chat-input-area { background: #23272f; border-top: 1px solid #2b4b6f; }
 #chatTextInput { flex: 1 1 auto; margin: 0 10px; padding: 12px 14px; border-radius: 8px; border: 1px solid #b6c2d6; font-size: 1.07em; min-width: 0; }
+#chatTextInput.dark, body.dark #chatTextInput { background: #23272f; color: #e6f4ff; border: 1px solid #2b4b6f; }
 #sendTextBtn { padding: 10px 26px; font-size: 1.1em; border-radius: 8px; border: none; background: linear-gradient(90deg, #4f8cff 0%, #38e8e1 100%); color: #fff; font-weight: bold; cursor: pointer; margin-left: 2px; }
+#sendTextBtn.dark, body.dark #sendTextBtn { background: linear-gradient(90deg, #2b4b6f 0%, #38e8e1 100%); color: #fff; }
 #sendTextBtn:hover { box-shadow: 0 2px 8px #b6e6ff; }
 #chatRoomCode { margin: 0 0 8px 0; text-align: center; font-size: 1.08em; color: #4677a3; font-weight: bold; letter-spacing: 1px; }
+#chatRoomCode.dark, body.dark #chatRoomCode { color: #7ecfff; }
 #attachBtn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: #4f8cff; margin-right: 8px; }
+#attachBtn.dark, body.dark #attachBtn { color: #38e8e1; }
 #start-section { max-width: 420px; margin: 40px auto 0 auto; background: #fff; box-shadow: 0 4px 24px #b6c2d6; padding: 32px 28px 24px 28px; border-radius: 18px; text-align: center; }
+#start-section.dark, body.dark #start-section { background: #23272f; box-shadow: 0 4px 24px #11151a; }
 #start-section h2 { margin-bottom: 0.5em; color: #2b4b6f; }
+#start-section h2.dark, body.dark #start-section h2 { color: #a5d6ff; }
 #startRoomCode { background: #e6f4ff; color: #2b4b6f; border-radius: 8px; padding: 10px; letter-spacing: 2px; }
+#startRoomCode.dark, body.dark #startRoomCode { background: #2b4b6f; color: #a5d6ff; }
 #startQR { margin: 18px 0; }
 #startChatBtn { padding: 12px 38px; font-size: 1.1em; border-radius: 8px; border: none; background: linear-gradient(90deg, #4f8cff 0%, #38e8e1 100%); color: #fff; font-weight: bold; cursor: pointer; box-shadow: 0 2px 8px #d6e6ff; }
+#startChatBtn.dark, body.dark #startChatBtn { background: linear-gradient(90deg, #2b4b6f 0%, #38e8e1 100%); color: #fff; box-shadow: 0 2px 8px #2b4b6f; }
 #startChatBtn:hover { box-shadow: 0 4px 16px #b6e6ff; }
+#startChatBtn.dark:hover, body.dark #startChatBtn:hover { box-shadow: 0 4px 16px #38e8e1; }
+/* QR/link styling for light mode */
+#startQR div, #qr div {
+  color: #2b4b6f;
+  background: #e6f4ff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  word-break: break-all;
+  margin: 0 auto;
+  display: inline-block;
+}
+/* QR/link styling for dark mode */
+body.dark #startQR div, body.dark #qr div {
+  color: #fff;
+  background: #2b4b6f;
+  border: 1px solid #38e8e1;
+}
