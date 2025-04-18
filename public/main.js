@@ -103,11 +103,7 @@ function sendFiles() {
   const files = Array.from(fileInput.files);
   if (!files.length) return;
   let fileIndex = 0;
-  function getChunkSize(fileSize) {
-    if (fileSize > 100 * 1024 * 1024) return 2 * 1024 * 1024; // 2MB for >100MB
-    if (fileSize > 10 * 1024 * 1024) return 1024 * 1024; // 1MB for >10MB
-    return 512 * 1024; // 512KB default
-  }
+  const chunkSize = 64 * 1024; // 64KB
   function sendNextFile() {
     if (fileIndex >= files.length) {
       sendProgressBar.value = 100;
@@ -116,7 +112,6 @@ function sendFiles() {
     }
     let file = files[fileIndex];
     let offset = 0;
-    let chunkSize = getChunkSize(file.size);
     sendProgressDiv.style.display = '';
     sendProgressBar.value = 0;
     sendProgressText.textContent = `0% (${file.name})`;
@@ -130,7 +125,7 @@ function sendFiles() {
       let buffer = e.target.result;
       function sendChunk() {
         while (offset < buffer.byteLength) {
-          if (dataChannel.bufferedAmount > 4 * 1024 * 1024) {
+          if (dataChannel.bufferedAmount > 512 * 1024) {
             setTimeout(sendChunk, 10);
             return;
           }
@@ -266,20 +261,14 @@ function addChatBubble({ name, type, progress, sent, done, text }) {
 // Chat-based file sending
 function sendFilesChat(files) {
   let fileIndex = 0;
-  function getChunkSize(fileSize) {
-    if (fileSize > 100 * 1024 * 1024) return 2 * 1024 * 1024;
-    if (fileSize > 10 * 1024 * 1024) return 1024 * 1024;
-    return 512 * 1024;
-  }
+  const chunkSize = 64 * 1024; // 64KB
   function sendNextFile() {
     if (fileIndex >= files.length) return;
     let file = files[fileIndex];
     let offset = 0;
-    let chunkSize = getChunkSize(file.size);
     let startTime = Date.now();
     let lastTime = startTime;
     let lastOffset = 0;
-    // Add chat bubble for this file
     let bubble = addChatBubble({name: file.name, type: file.type, progress: 0, sent: true, done: false});
     // Send file metadata
     dataChannel.send(JSON.stringify({ name: file.name, size: file.size, type: file.type, idx: fileIndex + 1, total: files.length, chat: true }));
@@ -288,7 +277,7 @@ function sendFilesChat(files) {
       let buffer = e.target.result;
       function sendChunk() {
         while (offset < buffer.byteLength) {
-          if (dataChannel.bufferedAmount > 4 * 1024 * 1024) {
+          if (dataChannel.bufferedAmount > 512 * 1024) {
             setTimeout(sendChunk, 10);
             return;
           }
@@ -312,7 +301,6 @@ function sendFilesChat(files) {
           else if (speed) bubble.appendChild(document.createTextNode(` - ${speed}`));
         }
         if (offset >= buffer.byteLength) {
-          // Mark as done
           if (bubble.querySelector('progress')) bubble.querySelector('progress').remove();
           bubble.appendChild(document.createTextNode('Sent!'));
           fileIndex++;
@@ -338,7 +326,10 @@ function sendTextMessage() {
 }
 sendTextBtn.onclick = sendTextMessage;
 chatTextInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter') sendTextMessage();
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    sendTextMessage();
+  }
 });
 
 // Signaling logic
