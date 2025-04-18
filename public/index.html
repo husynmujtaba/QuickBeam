@@ -29,11 +29,16 @@
 <body>
   <button class="dark-toggle" id="darkToggle" title="Toggle dark mode">🌙</button>
   <div id="app">
-    <h1>QuickBeam</h1>
+    <h1><a id="homeLink" href="#" style="color:inherit; text-decoration:none; cursor:pointer;">QuickBeam</a></h1>
     <div id="subtitle">Fast, Secure P2P File Sharing</div>
+    <div id="mode-select">
+      <button id="sendBtn">Send Files</button>
+      <button id="receiveBtn">Receive</button>
+    </div>
     <div id="how-to-use" class="how-to-use">
       <h2>How to Use QuickBeam</h2>
       <ol>
+        <li><strong>Network:</strong> Make sure your devices are on the same Wi‑Fi or LAN network.</li>
         <li><strong>Choose Mode:</strong> Click <b>Send Files</b> to send or <b>Receive</b> to receive files.</li>
         <li><strong>Start a Session:</strong> For sending, click <b>Start</b> to generate a room code and QR. For receiving, enter the room code shared by the sender.</li>
         <li><strong>Connect:</strong> Share the room code or QR with your peer. Wait for the connection status to show <b>User Connected</b>.</li>
@@ -42,17 +47,13 @@
       </ol>
       <div style="font-size:0.97em;color:#666;margin-top:8px;">No sign-up. Peer-to-peer. Works on mobile & desktop.</div>
     </div>
-    <div id="mode-select">
-      <button id="sendBtn">Send Files</button>
-      <button id="receiveBtn">Receive</button>
-    </div>
     <div id="start-section" style="display:none;">
       <h2>Start a QuickBeam Session</h2>
       <div id="startRoomCode" style="margin: 14px 0; font-size: 1.15em; font-weight: bold;"></div>
       <div id="startQR" style="text-align:center;"></div>
       <button id="startChatBtn" style="margin-top:18px;">Start</button>
     </div>
-    <div id="chat-section" style="position: relative;">
+    <div id="chat-section" style="display:none; position: relative;">
       <button id="closeSessionBtn" class="danger-btn" style="display:none; position: absolute; top: 6px; right: 12px; z-index: 10;">Close Session</button>
       <div id="chat-window"></div>
       <button id="userStatusBtn" class="status-btn" disabled>No User Connected</button>

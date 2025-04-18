@@ -6,13 +6,15 @@
 // main.js - handles WebRTC, signaling, QR, file transfer
 // const WS_URL = 'wss://quickbeam-signaling.onrender.com';
 // const APP_URL = '[https://quickbeam-p2p-fileshare.windsurf.build](https://quickbeam-p2p-fileshare.windsurf.build)';
-const WS_URL = 'wss://quickbeam-l0jd.onrender.com';
-const APP_URL = 'https://quickbeam-l0jd.onrender.com/';
+const WS_URL = 'wss://quickbeam.vercel.app';
+const APP_URL = 'https://quickbeam.vercel.app';
 let ws, pc, dataChannel, roomId, isSender = false;
 
 // UI elements
 const sendBtn = document.getElementById('sendBtn');
 const receiveBtn = document.getElementById('receiveBtn');
+const modeSelect = document.getElementById('mode-select');
+const howToUse = document.getElementById('how-to-use');
 const sendSection = document.getElementById('send-section');
 const receiveSection = document.getElementById('receive-section');
 const fileInput = document.getElementById('fileInput');
@@ -38,11 +40,16 @@ const startChatBtn = document.getElementById('startChatBtn');
 const chatTextInput = document.getElementById('chatTextInput');
 const sendTextBtn = document.getElementById('sendTextBtn');
 const closeSessionBtn = document.getElementById('closeSessionBtn');
+const homeLink = document.getElementById('homeLink');
 let firstFilesToSend = [];
+// Track if a session is active
+let sessionActive = false;
 
 // UI event handlers
 sendBtn.onclick = () => {
   isSender = true;
+  if (howToUse) howToUse.style.display = 'none';
+  if (modeSelect) modeSelect.style.display = 'none';
   startSection.style.display = '';
   receiveSection.style.display = 'none';
   chatSection.style.display = 'none';
@@ -53,9 +60,12 @@ sendBtn.onclick = () => {
 };
 receiveBtn.onclick = () => {
   isSender = false;
+  if (howToUse) howToUse.style.display = 'none';
+  if (modeSelect) modeSelect.style.display = 'none';
   sendSection.style.display = 'none';
   receiveSection.style.display = '';
   startSection.style.display = 'none'; // Hide the QR/start section if visible
+  chatSection.style.display = 'none';
   startRoomCode.textContent = '';
   startQR.innerHTML = '';
 };
@@ -377,6 +387,9 @@ function showQR(room) {
 
 // Show chat UI after pairing
 function showChatUI(room) {
+  // Disable home link when showing chat UI
+  sessionActive = true;
+  if (homeLink) homeLink.style.pointerEvents = 'none';
   chatSection.style.display = '';
   sendSection.style.display = 'none';
   receiveSection.style.display = 'none';
@@ -404,6 +417,9 @@ function showStartQR() {
 }
 
 startChatBtn.onclick = () => {
+  // Mark session active and disable home link
+  sessionActive = true;
+  if (homeLink) homeLink.style.pointerEvents = 'none';
   // Hide start, show chat
   startSection.style.display = 'none';
   chatSection.style.display = '';
@@ -428,6 +444,9 @@ fileInput.onchange = () => {
 
 // --- Show chat UI after pairing for receiver ---
 joinRoomBtn.onclick = () => {
+  // Mark session active and disable home link
+  sessionActive = true;
+  if (homeLink) homeLink.style.pointerEvents = 'none';
   roomId = roomInput.value.trim();
   if (!roomId) return alert('Enter room code!');
   createPeerConnection();
@@ -440,21 +459,27 @@ window.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   const room = params.get('room');
   if (room) {
+    // Disable home link for auto-joined session
+    sessionActive = true;
+    if (homeLink) homeLink.style.pointerEvents = 'none';
     isSender = false;
     startSection.style.display = 'none';
     sendSection.style.display = 'none';
     receiveSection.style.display = 'none';
     chatSection.style.display = '';
+    if (howToUse) howToUse.style.display = 'none';
     roomId = room;
     chatRoomCode.textContent = 'Room: ' + room;
     createPeerConnection();
     connectWebSocket();
   } else {
-    // Default: hide start-section, show mode-select
+    // Default: show how-to-use and mode-select only
     startSection.style.display = 'none';
     sendSection.style.display = 'none';
     receiveSection.style.display = 'none';
     chatSection.style.display = 'none';
+    if (howToUse) howToUse.style.display = '';
+    if (modeSelect) modeSelect.style.display = '';
   }
 });
 
@@ -519,3 +544,40 @@ document.getElementById('closeSessionBtn').onclick = function() {
     location.reload();
   }
 };
+
+// Home link click: return to landing page
+if (homeLink) {
+  homeLink.addEventListener('click', e => {
+    e.preventDefault();
+    // Always reload to reset UI to home
+    window.location.href = window.location.pathname;
+  });
+}
+
+// Hide 'How to Use' section after selecting mode and when session starts
+if (sendBtn && receiveBtn && howToUse) {
+  sendBtn.addEventListener('click', () => {
+    howToUse.style.display = 'none';
+  });
+  receiveBtn.addEventListener('click', () => {
+    howToUse.style.display = 'none';
+  });
+}
+if (startChatBtn && howToUse) {
+  startChatBtn.addEventListener('click', () => {
+    howToUse.style.display = 'none';
+  });
+}
+if (joinRoomBtn && howToUse) {
+  joinRoomBtn.addEventListener('click', () => {
+    howToUse.style.display = 'none';
+  });
+}
+// Also hide on auto-join via URL param
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  const room = params.get('room');
+  if (room && howToUse) {
+    howToUse.style.display = 'none';
+  }
+});
