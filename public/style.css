@@ -199,3 +199,25 @@ body.dark #startQR div, body.dark #qr div {
 .danger-btn:hover {
   background: #b71c1c;
 }
+.status-btn {
+  background: #e0e0e0;
+  color: #444;
+  border: none;
+  border-radius: 16px;
+  padding: 6px 18px;
+  font-size: 1em;
+  font-weight: 500;
+  margin: 0 0 10px 0;
+  cursor: default;
+  outline: none;
+  transition: background 0.2s, color 0.2s;
+  display: inline-block;
+}
+.status-btn.connected {
+  background: #38e8a1;
+  color: #fff;
+}
+.status-btn.disconnected {
+  background: #e57373;
+  color: #fff;
+}

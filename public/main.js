@@ -92,9 +92,11 @@ function createPeerConnection() {
 function setupDataChannel(isInitiator) {
   dataChannel.binaryType = 'arraybuffer';
   dataChannel.onopen = () => {
+    setUserStatus(true);
     // Only call sendFiles if files are already selected and this is initial open
     if (isInitiator && fileInput.files.length > 0) sendFiles();
   };
+  dataChannel.onclose = () => setUserStatus(false);
   dataChannel.onmessage = handleDataChannelMessage;
 }
 
@@ -459,6 +461,28 @@ window.addEventListener('DOMContentLoaded', () => {
 // Utility to show/hide Close Session button
 function setCloseSessionVisible(visible) {
   closeSessionBtn.style.display = visible ? '' : 'none';
+}
+
+// Utility to update user status button
+function setUserStatus(connected) {
+  const btn = document.getElementById('userStatusBtn');
+  if (!btn) return;
+  if (connected) {
+    btn.textContent = 'User Connected';
+    btn.classList.add('connected');
+    btn.classList.remove('disconnected');
+  } else {
+    btn.textContent = 'No User Connected';
+    btn.classList.remove('connected');
+    btn.classList.add('disconnected');
+  }
+}
+
+// --- Update user status on peer connection events ---
+if (window.dataChannel) {
+  setUserStatus(dataChannel.readyState === 'open');
+  dataChannel.onopen = () => setUserStatus(true);
+  dataChannel.onclose = () => setUserStatus(false);
 }
 
 // --- Drag and drop file support for chat window ---
