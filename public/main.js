@@ -6,7 +6,8 @@
 // main.js - handles WebRTC, signaling, QR, file transfer
 // const WS_URL = 'wss://quickbeam-signaling.onrender.com';
 // const APP_URL = '[https://quickbeam-p2p-fileshare.windsurf.build](https://quickbeam-p2p-fileshare.windsurf.build)';
-const WS_URL = 'wss://quickbeam.vercel.app';
+// const WS_URL = 'wss://quickbeam.vercel.app';
+const WS_URL = 'wss://quickbeam-l0jd.onrender.com';
 const APP_URL = 'https://quickbeam.vercel.app';
 let ws, pc, dataChannel, roomId, isSender = false;
 
